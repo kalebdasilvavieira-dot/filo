@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dois Ouvidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand"><span class="mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 9a7 7 0 0 1 14 0" stroke="#6FD1BC" stroke-width="2.4" stroke-linecap="round"/><path d="M8.5 9.5a3.5 3.5 0 0 1 7 0" stroke="#6FD1BC" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="17" r="2.6" fill="#F2A57A"/></svg></span>Dois Ouvidos</div>
+    <span class="ratio">ouça 2, fale 1</span>
+  </div>
+
+  <main class="view" id="v-perguntar" aria-labelledby="h-perg">
+    <div class="hero">
+      <canvas id="waves" aria-hidden="true"></canvas>
+      <div class="hero-txt">
+        <h1 id="h-perg" tabindex="-1">Toda pessoa sabe algo que você não sabe.</h1>
+        <p>Leve uma boa pergunta, ouça mais do que fala e guarde o que aprendeu.</p>
+        <div class="legend"><span><i style="background:var(--hero-a)"></i>a outra pessoa</span><span><i style="background:var(--hero-b)"></i>você</span></div>
+      </div>
+    </div>
+    <div class="vhead"><span class="step">Passo 1 de 3: antes da conversa</span><h2>Com quem você vai conversar?</h2></div>
+    <div class="chips" role="group" aria-label="Com quem você vai conversar" id="ctx"></div>
+    <div class="deck"><div class="qcard" id="qcard" aria-live="polite">
+      <q id="question"></q>
+      <div class="qrow"><div class="dots" id="dots" aria-hidden="true"></div><button class="btn" id="nextQ" type="button">Outra pergunta</button></div>
+    </div></div>
+    <div class="tip"><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><div><b>Dica de escuta</b><span id="tip"></span></div></div>
+    <button class="btn go" type="button" data-go="ouvir">Começar a conversa</button>
+  </main>
+
+  <main class="view" id="v-ouvir" aria-labelledby="h-ouvir" hidden>
+    <div class="vhead"><span class="step">Passo 2 de 3: durante a conversa</span><h2 id="h-ouvir" tabindex="-1">Quanto você está ouvindo?</h2><p>Deixe o celular na mesa e toque em quem está falando. A meta é ouvir dois terços do tempo.</p></div>
+    <div class="meter">
+      <div class="ring">
+        <svg viewBox="-20 -20 300 300" aria-hidden="true">
+          <circle class="track" cx="130" cy="130" r="110" fill="none" stroke-width="24"/>
+          <g transform="rotate(-90 130 130)">
+            <circle class="arc-o" id="arcO" cx="130" cy="130" r="110" fill="none" stroke-width="24" stroke-dasharray="0 700"/>
+            <circle class="arc-f" id="arcF" cx="130" cy="130" r="110" fill="none" stroke-width="24" stroke-dasharray="0 700"/>
+          </g>
+          <line class="tick" x1="34.7" y1="185" x2="19.1" y2="194"/>
+          <text class="ticklbl" x="-2" y="212" text-anchor="middle">meta</text>
+        </svg>
+        <div class="ring-c"><span class="lbl">você ouviu</span><span class="pct" id="pct">–</span><span class="time" id="total">0:00 de conversa</span></div>
+      </div>
+      <p class="verdict" id="verdict" aria-live="polite">Toque em um dos botões quando a conversa começar.</p>
+      <div class="toggles">
+        <button class="tg o" id="tgO" type="button" aria-pressed="false"><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>A outra pessoa fala<small id="tO">0:00</small></button>
+        <button class="tg f" id="tgF" type="button" aria-pressed="false"><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Eu falo<small id="tF">0:00</small></button>
+      </div>
+      <div class="controls">
+        <button class="btn soft" id="pause" type="button" disabled>Pausar</button>
+        <button class="btn soft" id="reset" type="button" disabled>Zerar</button>
+        <button class="btn go" id="finish" type="button" disabled>Terminar</button>
+      </div>
+    </div>
+  </main>
+
+  <main class="view" id="v-aprender" aria-labelledby="h-apr" hidden>
+    <div class="vhead"><span class="step">Passo 3 de 3: depois da conversa</span><h2 id="h-apr" tabindex="-1">O que essa pessoa te ensinou?</h2><p>Escreva enquanto lembra. Uma frase concreta vale mais que um resumo.</p></div>
+    <div class="sess" id="sess" hidden>
+      <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="none" stroke="var(--surface)" stroke-width="7"/><circle id="sessArc" cx="24" cy="24" r="19" fill="none" stroke="var(--ouvir)" stroke-width="7" stroke-dasharray="0 119.4" transform="rotate(-90 24 24)"/></svg>
+      <div><b id="sessPct"></b><span id="sessTime"></span></div>
+    </div>
+    <form id="form" novalidate>
+      <label for="rel">Com quem você conversou?<span class="hint">Use a relação, não o nome: “minha avó”, “um colega do financeiro”.</span><input type="text" id="rel" maxlength="60" autocomplete="off" placeholder="minha vizinha do 3º andar"></label>
+      <label for="licao">O que você aprendeu?<textarea id="licao" maxlength="280" placeholder="Que dá para consertar quase tudo em casa se você ler o manual inteiro antes de começar."></textarea></label>
+      <label class="switch" for="share">Publicar no mural para outras pessoas aprenderem também<input type="checkbox" id="share" checked></label>
+      <div class="formfoot"><span class="cc" id="cc">0 / 280</span><button class="btn go" id="save" type="submit">Guardar lição</button></div>
+      <p class="status" id="status" role="status"></p>
+    </form>
+    <div class="stats" aria-label="Seus números">
+      <div class="stat"><b id="mCount">0</b><span>lições guardadas</span></div>
+      <div class="stat"><b id="mAvg">–</b><span>escuta média</span></div>
+      <div class="stat"><b id="mHit">–</b><span>bateram a meta</span></div>
+    </div>
+  </main>
+
+  <main class="view" id="v-mural" aria-labelledby="h-mural" hidden>
+    <div class="vhead"><span class="step">Mural coletivo</span><h2 id="h-mural" tabindex="-1">O que aprendemos ouvindo</h2><p>Lições tiradas de conversas reais. Ler também é ouvir.</p></div>
+    <p class="notice" id="wallNotice" hidden></p>
+    <div class="wall" id="wall"><div class="empty"><b>Carregando o mural…</b><span>As lições de quem usa o Dois Ouvidos aparecem aqui.</span></div></div>
+  </main>
+</div>
+
+<nav class="tabs" aria-label="Navegação"><div class="tabs-in">
+  <a class="tab" href="#perguntar" data-tab="perguntar"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5v-8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 8.2a2 2 0 1 1 2.6 1.9c-.4.1-.6.5-.6.9v.4M12 13.4v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Perguntar</a>
+  <a class="tab" href="#ouvir" data-tab="ouvir"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 11v2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Ouvir</a>
+  <a class="tab" href="#aprender" data-tab="aprender"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="2"/></svg>Aprender</a>
+  <a class="tab" href="#mural" data-tab="mural"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="9" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="3.5" width="7" height="5" rx="2" stroke="currentColor" stroke-width="2"/><rect x="3.5" y="15.5" width="7" height="5" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2" stroke="currentColor" stroke-width="2"/></svg>Mural</a>
+</div></nav>
+
+<script src="js/app.js"></script>
+</body>
+</html>
